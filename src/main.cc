@@ -73,6 +73,15 @@ int main(int argc, char **argv) {
     crow::SimpleApp app;
 
     CROW_ROUTE(app, "/image")
+    .methods("OPTIONS"_method)
+    ([](const crow::request &req) {
+        crow::response resp;
+        resp.add_header("Access-Control-Allow-Origin","*");
+        return resp;
+    });
+
+
+    CROW_ROUTE(app, "/image")
             .methods("POST"_method)
                     ([configuration, mapRoute, meterFactor](const crow::request &req) {
                         crow::response resp;
@@ -113,7 +122,8 @@ int main(int argc, char **argv) {
                         string message = getVectorAsString(displacementVector);
                         cout << "The resultant vector is: " + message << endl;
                         resp.body = message;
-
+                        resp.add_header("Content-Type", "text/plain");
+                        resp.add_header("Access-Control-Allow-Origin","*");
                         return resp;
                     });
     app.port(9000).multithreaded().run();
