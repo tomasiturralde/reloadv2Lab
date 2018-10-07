@@ -1,15 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <title>Index</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link rel="stylesheet" type="text/css" href="./style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Dosis" rel="stylesheet">
 </head>
+
 <body>
-<input type="file" onchange="postImgB64(this)" />
-<script src="postimg.js"></script>
+
+    <nav class="navbar navbar-inverse container-fluid">
+            <div class="navbar-header">
+              <img src="logo.png" style="height:50px;margin: 1%;margin-left: 28%;" >
+              <!-- <a class="navbar-brand">r e l o a d</a> -->
+            </div>
+    </nav>
+
+    <div class="container">
+        <form method="POST" action="/photo" encType="multipart/form-data">
+            <div class="row text-center">
+                    <div class="col-xs-6 col-md-2 col-md-offset-4">
+                    <input id="pic" type="file" onchange="postImgB64(this)" class="input-file" name="imageUpload" accept="image/*" capture>
+                    <label for="pic" class="btn btn-default btn-block" style="margin-left:60%; margin-right:20%">Elegir imagen</label>
+                </div>
+            </div>
+        </form>
+        <div class="row center-block">
+          <img id="imgPreview" class="imgPreview img-responsive" onError="this.style.display = 'none';"/>
+        </div>
+
+        <div class="row">
+	    	<div class="col-md-2 col-sm-4 col-md-offset-5 col-sm-offset-4">
+	    		<div class="loader"></div>
+	    	</div>
+	    </div>
+    </div>
 
 
-<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">
 
         <!-- Modal content-->
@@ -28,13 +58,11 @@
 
     </div>
 </div>
+
+    
+    <script src="postimg.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </body>
 
-
-
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
 </html>
-
