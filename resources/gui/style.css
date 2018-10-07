@@ -1,0 +1,98 @@
+.navbar{
+  background-color: #0c247c;
+  border-color: #0c247c;
+
+}
+
+.navbar-inverse {
+  vertical-align: middle !important;
+    align-items: center !important;
+    border-radius: 0;
+    height: 60px;
+}
+
+.navbar-brand{
+    color: white !important;
+    cursor: default;
+    position: absolute;
+    width: 100%;
+    margin: auto;
+    font-family: 'Dosis', sans-serif;
+    font-size: 2em;
+    text-align: center;
+}
+
+.input-file{
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+
+
+.input-file + label {
+    border: solid 1.5px;
+    border-color: #7A7A77;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 1em;
+    color: #7A7A77;
+    background-color: white;
+}
+
+.input-file:focus + label,
+.input-file + label:hover {
+    background-color: white;
+    border-color: #0c247c;
+    color: #0c247c;
+}
+
+.btn-send{
+  border: solid 1.5px;
+  border-radius: 3px;
+  color: #7A7A77;
+  border-color: #7A7A77;
+}
+
+.btn-send:hover{
+  border-color: #0c247c;
+  color: #0c247c;
+  background-color: white;
+}
+
+
+.imgPreview{
+  margin-top: 20px;
+  max-width: auto;
+  max-height: 500px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  image-orientation: from-image;
+}
+.loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #0c247c;
+  width: 200px;
+  height: 200px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+  text-align: center;
+  /*margin-top: 60px;*/
+  margin: 60px auto 0 auto;
+  visibility: hidden;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
