@@ -9,12 +9,12 @@ function init() {
 
 }
 
-function draw(array) {
+function draw(x, y, rot) {
     var canvas = document.getElementById("e");
     var context = canvas.getContext("2d");
-    var posX = array[0];
-    var posY = array[1];
-    var rotate = array[2];
+    var posX = x;
+    var posY = y;
+    var rotate = rot;
 
     var img = document.getElementById("arrow");
     img.style.setProperty("--element-top", posX + 'px');

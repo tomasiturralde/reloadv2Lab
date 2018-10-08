@@ -1,6 +1,8 @@
 var http = new XMLHttpRequest();
 var url = "http://localhost:9000/image";
 var img = undefined;
+const ORIGIN_X =  780; //240
+const ORIGIN_Y = 287; //370
 http.open("POST", url, true);
 http.withCredentials = true;
 http.setRequestHeader("Content-Type", "application/json");
@@ -10,7 +12,10 @@ http.onreadystatechange = function () {
     if (http.readyState === 4 && http.status === 200) {
         // document.getElementById("texto").innerHTML = http.response;
         // $("#myModal").modal()
-        draw(http.response.split(" "));
+        coordinates = http.response.split(" ");
+        const x = coordinates[0] + ORIGIN_X;
+        const y = coordinates[2] + ORIGIN_Y;
+        draw(x, y, 0);
     }
 };
 
@@ -22,8 +27,6 @@ function postImgB64(element) {
         img = reader.result.split(',')[1];
         var data = JSON.stringify({"uri": img});
         http.send(data);
-        // draw([780, 287, 0]);
-        //    y, x, rot
     };
     reader.readAsDataURL(file);
 }
