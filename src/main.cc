@@ -108,8 +108,8 @@ int main(int argc, char **argv) {
                         }
                         cv::Mat initialVector = initialMatrix * initialMatrix.col(3);
 
-                        // img deberia ser la que llega pero la initial matrix debe usar origin
                         Mat relocMatrix = operate(img, mapRoute);
+                        cout << "Relocation matrix: " << endl;
                         cout << relocMatrix << endl;
                         Mat displacementVector;
                         if (!bogusImage) {
@@ -119,7 +119,7 @@ int main(int argc, char **argv) {
                             displacementVector = relocMatrix;
                         }
                         string message = getVectorAsString(displacementVector);
-                        cout << "The resultant vector is: " + message << endl;
+                        cout << "The resultant displacement vector is: " + message << endl;
                         resp.body = message;
                         resp.add_header("Content-Type", "text/plain");
                         resp.add_header("Access-Control-Allow-Origin","*");
@@ -165,8 +165,11 @@ cv::Mat calculateLocation(const Mat &initialMatrix, const Mat &relocMatrix,
                           const Mat &initialVector, const double factor) {
     Mat relocVector = initialMatrix * (relocMatrix.col(3));
     Mat resultantVector = relocVector - initialVector;
+    cout << "Resultant Vector (no factor):" << endl;
     cout << resultantVector << endl;
     resultantVector = resultantVector * factor;
+    cout << "Resultant Vector (with factor):" << endl;
+    cout << resultantVector << endl;
     return resultantVector;
 }
 
@@ -180,6 +183,7 @@ string getVectorAsString(const Mat &vector) {
 Mat loadInitialMatrix(const string &initialImageLocation, const string &mapRoute) {
     Mat image = imread(initialImageLocation, CV_LOAD_IMAGE_GRAYSCALE);
     Mat result = operate(image, mapRoute);
+    cout << "Initial image matrix: " << endl;
     cout << result << endl;
     return result;
 }
