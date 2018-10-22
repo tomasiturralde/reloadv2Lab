@@ -34,7 +34,7 @@ ORB_SLAM2::System *Sistema;
 void loadMap(const string &rutaMapa);
 Mat operate(const Mat &image, const string &mapRoute);
 string getVectorAsString(const Mat &vector);
-Mat loadInitialMatrix(const Mat &image, const string &mapRoute);
+Mat loadInitialMatrix(const string &initialImageLocation, const string &mapRoute);
 Mat calculateLocation(const Mat &initialMatrix, const Mat &relocMatrix, const Mat &initialVector, double factor);
 
 
@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
     json configuration = json::parse(ifs);
 
     const string mapRoute = configuration["map"];
-    const string initialImageLocation = configuration["initialImage"];
+    const string initialImageLocation = configuration["initialImage2"];
     const double meterFactor = configuration["meterFactor"];
     const string rutaConfiguracion = configuration["webcam"];	// Configuración por defecto, para webcam.
 
@@ -52,8 +52,6 @@ int main(int argc, char **argv) {
     cout	<< "Iniciando ORB-SLAM.  Línea de comando:" << endl;
 
     // Parámetros de la línea de comando
-    char* rutaVideo = nullptr;
-
     ORB_SLAM2::System SLAM(configuration["vocabulary"], rutaConfiguracion,ORB_SLAM2::System::MONOCULAR,true);
 
     // Puntero global al sistema singleton
@@ -83,7 +81,7 @@ int main(int argc, char **argv) {
 
     CROW_ROUTE(app, "/image")
             .methods("POST"_method)
-                    ([configuration, mapRoute, meterFactor](const crow::request &req) {
+                    ([configuration, mapRoute, meterFactor, initialImageLocation](const crow::request &req) {
                         crow::response resp;
                         resp = crow::response(200);
                         auto body = crow::json::load(req.body);
@@ -99,7 +97,7 @@ int main(int argc, char **argv) {
                         cv::imshow( "Display window", img );               // Show our image inside it.
 
                         cv::Mat initialMatrix;
-                        initialMatrix = loadInitialMatrix(img, mapRoute);
+                        initialMatrix = loadInitialMatrix(initialImageLocation, mapRoute);
                         float x = initialMatrix.at<float>(0, 0);
                         float y = initialMatrix.at<float>(1, 0);
                         float z = initialMatrix.at<float>(2, 0);
@@ -111,6 +109,7 @@ int main(int argc, char **argv) {
                         cv::Mat initialVector = initialMatrix * initialMatrix.col(3);
 
                         Mat relocMatrix = operate(img, mapRoute);
+                        cout << "Relocation matrix: " << endl;
                         cout << relocMatrix << endl;
                         Mat displacementVector;
                         if (!bogusImage) {
@@ -120,7 +119,7 @@ int main(int argc, char **argv) {
                             displacementVector = relocMatrix;
                         }
                         string message = getVectorAsString(displacementVector);
-                        cout << "The resultant vector is: " + message << endl;
+                        cout << "The resultant displacement vector is: " + message << endl;
                         resp.body = message;
                         resp.add_header("Content-Type", "text/plain");
                         resp.add_header("Access-Control-Allow-Origin","*");
@@ -166,8 +165,11 @@ cv::Mat calculateLocation(const Mat &initialMatrix, const Mat &relocMatrix,
                           const Mat &initialVector, const double factor) {
     Mat relocVector = initialMatrix * (relocMatrix.col(3));
     Mat resultantVector = relocVector - initialVector;
+    cout << "Resultant Vector (no factor):" << endl;
     cout << resultantVector << endl;
     resultantVector = resultantVector * factor;
+    cout << "Resultant Vector (with factor):" << endl;
+    cout << resultantVector << endl;
     return resultantVector;
 }
 
@@ -178,9 +180,10 @@ string getVectorAsString(const Mat &vector) {
     return to_string(x) + " " + to_string(y) + " " + to_string(z);
 }
 
-Mat loadInitialMatrix(const cv::Mat &image, const string &mapRoute) {
-    // Mat image = imread(initialImageLocation, CV_LOAD_IMAGE_GRAYSCALE);
+Mat loadInitialMatrix(const string &initialImageLocation, const string &mapRoute) {
+    Mat image = imread(initialImageLocation, CV_LOAD_IMAGE_GRAYSCALE);
     Mat result = operate(image, mapRoute);
+    cout << "Initial image matrix: " << endl;
     cout << result << endl;
     return result;
 }
