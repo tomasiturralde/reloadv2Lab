@@ -18,6 +18,7 @@
 #include <Video.h>
 
 #include <base64.h>
+#include <cmath>
 
 #include <nlohmann/json.hpp>
 
@@ -37,6 +38,12 @@ string getVectorAsString(const Mat &vector);
 Mat loadInitialMatrix(const string &initialImageLocation, const string &mapRoute);
 Mat calculateLocation(const Mat &initialMatrix, const Mat &relocMatrix, const Mat &initialVector, double factor);
 
+
+Mat displace(const Mat &relocMatrix);
+
+Mat substractTranslations(const Mat &relocMatrix, const Mat &displacedRelocMatrix);
+
+float getAngle(Mat mat);
 
 int main(int argc, char **argv) {
 
@@ -109,8 +116,15 @@ int main(int argc, char **argv) {
                         cv::Mat initialVector = initialMatrix * initialMatrix.col(3);
 
                         Mat relocMatrix = operate(img, mapRoute);
+                        Mat displacedRelocMatrix = displace(relocMatrix);
+                        cout << "Displaced reloc matrix" << endl;
+                        cout << displacedRelocMatrix << endl;
                         cout << "Relocation matrix: " << endl;
                         cout << relocMatrix << endl;
+
+                        Mat resVector = substractTranslations(relocMatrix, displacedRelocMatrix);
+                        float angle = getAngle(resVector);
+
                         Mat displacementVector;
                         if (!bogusImage) {
                             displacementVector = calculateLocation(initialMatrix, relocMatrix, initialVector, meterFactor);
@@ -120,7 +134,7 @@ int main(int argc, char **argv) {
                         }
                         string message = getVectorAsString(displacementVector);
                         cout << "The resultant displacement vector is: " + message << endl;
-                        resp.body = message;
+                        resp.body = message + "," + std::to_string(angle);
                         resp.add_header("Content-Type", "text/plain");
                         resp.add_header("Access-Control-Allow-Origin","*");
                         return resp;
@@ -225,4 +239,27 @@ void loadMap(const string &rutaMapa) {
     // Como tiene un mutex, por las dudas lo invoco después de viewer.release.
     (*Sistema).mpFrameDrawer->Update((*Sistema).mpTracker);
     (*Sistema).mpTracker->mbOnlyTracking = true;
+}
+
+Mat displace(const Mat &relocMatrix) {
+    Mat advanceZAxis;
+    advanceZAxis = Mat::zeros(4, 4, CV_32F);
+    advanceZAxis.at<float>(0, 0) = 1;
+    advanceZAxis.at<float>(1, 1) = 1;
+    advanceZAxis.at<float>(2, 2) = 1;
+    advanceZAxis.at<float>(3, 3) = 1;
+    advanceZAxis.at<float>(2, 3) = 1;
+    cout << "Z + 1: " << endl;
+    cout << advanceZAxis << endl;
+    return relocMatrix * advanceZAxis;
+}
+
+Mat substractTranslations(const Mat &relocMatrix, const Mat &displacedRelocMatrix) {
+    return displacedRelocMatrix.col(4) - relocMatrix.col(4);
+}
+
+float getAngle(Mat mat) {
+    float x = mat.at<float>(0, 0);
+    float z = mat.at<float>(2, 0);
+    return std::atan2(z, x);
 }
