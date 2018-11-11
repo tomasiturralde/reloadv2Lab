@@ -12,7 +12,7 @@ http.onreadystatechange = function () {
     if (http.readyState === 4 && http.status === 200) {
         // document.getElementById("texto").innerHTML = http.response;
         // $("#myModal").modal()
-        coordinates = http.response.split(" ");
+        let coordinates = http.response.split(" ");
         const x = coordinates[0] + ORIGIN_X;
         const y = coordinates[2] + ORIGIN_Y;
         draw(x, y, 0);

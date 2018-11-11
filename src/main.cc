@@ -35,14 +35,10 @@ ORB_SLAM2::System *Sistema;
 void loadMap(const string &rutaMapa);
 Mat operate(const Mat &image, const string &mapRoute);
 string getVectorAsString(const Mat &vector);
-Mat loadInitialMatrix(const string &initialImageLocation, const string &mapRoute);
+Mat loadMatrix(const string &imageLocation, const string &mapRoute);
 Mat calculateLocation(const Mat &initialMatrix, const Mat &relocMatrix, const Mat &initialVector, double factor);
-
-
 Mat displace(const Mat &relocMatrix);
-
 Mat substractTranslations(const Mat &relocMatrix, const Mat &displacedRelocMatrix);
-
 float getAngle(Mat mat);
 
 int main(int argc, char **argv) {
@@ -51,7 +47,7 @@ int main(int argc, char **argv) {
     json configuration = json::parse(ifs);
 
     const string mapRoute = configuration["map"];
-    const string initialImageLocation = configuration["initialImage2"];
+    const string initialImageLocation = configuration["initialImage"];
     const double meterFactor = configuration["meterFactor"];
     const string rutaConfiguracion = configuration["webcam"];	// Configuración por defecto, para webcam.
 
@@ -104,7 +100,7 @@ int main(int argc, char **argv) {
                         cv::imshow( "Display window", img );               // Show our image inside it.
 
                         cv::Mat initialMatrix;
-                        initialMatrix = loadInitialMatrix(initialImageLocation, mapRoute);
+                        initialMatrix = loadMatrix(initialImageLocation, mapRoute);
                         float x = initialMatrix.at<float>(0, 0);
                         float y = initialMatrix.at<float>(1, 0);
                         float z = initialMatrix.at<float>(2, 0);
@@ -142,6 +138,12 @@ int main(int argc, char **argv) {
     app.port(9000).multithreaded().run();
 }
 
+/**
+ * Get rototranslation matrix from OrbSlam system
+ * @param image image whose rototranslation matrix is wanted
+ * @param mapRoute relative route to the .osMap file
+ * @return corresponding rototranslation matrix
+ */
 Mat operate(const Mat &image, const string &mapRoute) {
 
     bool operate = true;
@@ -157,7 +159,7 @@ Mat operate(const Mat &image, const string &mapRoute) {
             bogusImage = false;
         }
 
-        // Ver si hay señal para cargar el mapa, que debe hacerse desde este thread
+        // Check if there is signal to load map; needs to be done from this thread
         if (!loadedMap) {
             cout << "Cargando mapa" << endl;
             loadMap(mapRoute);
@@ -175,6 +177,14 @@ Mat operate(const Mat &image, const string &mapRoute) {
     return result;
 }
 
+/**
+ * Gets the translation vector, scaled using the arbitrary factor
+ * @param initialMatrix rototranslation matrix corresponding to origin
+ * @param relocMatrix rototranslation matrix corresponding to sent image
+ * @param initialVector translation vector of origin
+ * @param factor arbitrary factor to adapt scale to meters
+ * @return displacement vector of sent image
+ */
 cv::Mat calculateLocation(const Mat &initialMatrix, const Mat &relocMatrix,
                           const Mat &initialVector, const double factor) {
     Mat relocVector = initialMatrix * (relocMatrix.col(3));
@@ -187,6 +197,11 @@ cv::Mat calculateLocation(const Mat &initialMatrix, const Mat &relocMatrix,
     return resultantVector;
 }
 
+/**
+ * Gets a string corresponding to a Mat::vector
+ * @param vector target
+ * @return a string with coordinates as strings "x y z"
+ */
 string getVectorAsString(const Mat &vector) {
     float x = vector.at<float>(0, 0);
     float y = vector.at<float>(1, 0);
@@ -194,14 +209,24 @@ string getVectorAsString(const Mat &vector) {
     return to_string(x) + " " + to_string(y) + " " + to_string(z);
 }
 
-Mat loadInitialMatrix(const string &initialImageLocation, const string &mapRoute) {
-    Mat image = imread(initialImageLocation, CV_LOAD_IMAGE_GRAYSCALE);
+/**
+ * Get the rototranslation matrix from an image about the .osMap
+ * @param imageLocation relative path to the image
+ * @param mapRoute relative path to the desired .osMap
+ * @return corresponding rototranslation matrix
+ */
+Mat loadMatrix(const string &imageLocation, const string &mapRoute) {
+    Mat image = imread(imageLocation, CV_LOAD_IMAGE_GRAYSCALE);
     Mat result = operate(image, mapRoute);
     cout << "Initial image matrix: " << endl;
     cout << result << endl;
     return result;
 }
 
+/**
+ *
+ * @param rutaMapa
+ */
 void loadMap(const string &rutaMapa) {
     (*Sistema).mpViewer->cargarMapa = false;
 
@@ -249,17 +274,24 @@ Mat displace(const Mat &relocMatrix) {
     advanceZAxis.at<float>(2, 2) = 1;
     advanceZAxis.at<float>(3, 3) = 1;
     advanceZAxis.at<float>(2, 3) = 1;
+    Mat advanceZ = relocMatrix * advanceZAxis;
     cout << "Z + 1: " << endl;
-    cout << advanceZAxis << endl;
-    return relocMatrix * advanceZAxis;
+    cout << advanceZ << endl;
+    return advanceZ;
 }
 
 Mat substractTranslations(const Mat &relocMatrix, const Mat &displacedRelocMatrix) {
-    return displacedRelocMatrix.col(4) - relocMatrix.col(4);
+    Mat rslt = displacedRelocMatrix.col(3) - relocMatrix.col(3);
+    cout << "Resultant translation: " << endl;
+    cout << rslt << endl;
+    return rslt;
 }
 
 float getAngle(Mat mat) {
     float x = mat.at<float>(0, 0);
     float z = mat.at<float>(2, 0);
-    return std::atan2(z, x);
+    auto angle = static_cast<float>(std::atan2(z, x) * 180 / 3.14159265359);
+    cout << "Angle: " << endl;
+    cout << angle << endl;
+    return angle;
 }
