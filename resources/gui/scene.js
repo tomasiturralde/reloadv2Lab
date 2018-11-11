@@ -2,7 +2,7 @@ function init() {
     var canvas = document.getElementById("e");
     var context = canvas.getContext("2d");
     var plane = new Image();
-    plane.src = "plano.png";
+    plane.src = "plano.jpg";
     plane.onload = function() {
         context.drawImage(plane, 0, 0, 480, 800);
     };
