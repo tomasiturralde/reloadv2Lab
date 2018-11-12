@@ -2,7 +2,7 @@ var http = new XMLHttpRequest();
 var url = "http://localhost:9000/image";
 var img = undefined;
 
-http.open("POST", url, true);
+http.open("POST", url, false);
 http.withCredentials = true;
 http.setRequestHeader("Content-Type", "application/json");
 http.setRequestHeader("Access-Control-Allow-Origin", "*");
@@ -12,7 +12,7 @@ http.onreadystatechange = function () {
         // document.getElementById("texto").innerHTML = http.response;
         // $("#myModal").modal()
 	let response = http.response.split(",");
-        let coordinates = response[0].split(" ")
+        let coordinates = response[0].split(" ");
         const x = coordinates[0];
         const y = coordinates[2];
 	const angle = response[1];
