@@ -3,7 +3,7 @@ var url = "http://localhost:9000/image";
 var img = undefined;
 
 http.open("POST", url, true);
-http.withCredentials = true;
+// http.withCredentials = true;
 http.setRequestHeader("Content-Type", "application/json");
 http.setRequestHeader("Access-Control-Allow-Origin", "*");
 http.setRequestHeader("Access-Control-Allow-Methods", "POST");

@@ -136,6 +136,7 @@ int main(int argc, char **argv) {
                         resp.body = message + "," + std::to_string(angle);
                         resp.add_header("Content-Type", "text/plain");
                         resp.add_header("Access-Control-Allow-Origin","*");
+			resp.add_header("Access-Control-Allow-Methods","POST");
                         return resp;
                     });
     app.port(9000).multithreaded().run(); // puerto local 9000
