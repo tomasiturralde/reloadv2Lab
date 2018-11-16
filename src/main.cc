@@ -33,12 +33,19 @@ ORB_SLAM2::System *Sistema;
 
 
 void loadMap(const string &rutaMapa);
+
 Mat operate(const Mat &image, const string &mapRoute);
+
 string getVectorAsString(const Mat &vector);
+
 Mat loadMatrix(const string &imageLocation, const string &mapRoute);
+
 Mat calculateLocation(const Mat &initialMatrix, const Mat &relocMatrix, const Mat &initialVector, double factor);
+
 Mat displace(const Mat &relocMatrix);
+
 Mat substractTranslations(const Mat &relocMatrix, const Mat &displacedRelocMatrix);
+
 float getAngle(Mat mat);
 
 int main(int argc, char **argv) {
@@ -49,13 +56,13 @@ int main(int argc, char **argv) {
     const string mapRoute = configuration["map"];
     const string initialImageLocation = configuration["initialImage"];
     const double meterFactor = configuration["meterFactor"];
-    const string rutaConfiguracion = configuration["webcam"];	// Configuración por defecto, para webcam.
+    const string rutaConfiguracion = configuration["webcam"];    // Configuración por defecto, para webcam.
 
 
-    cout	<< "Iniciando ORB-SLAM.  Línea de comando:" << endl;
+    cout << "Iniciando ORB-SLAM.  Línea de comando:" << endl;
 
     // Parámetros de la línea de comando
-    ORB_SLAM2::System SLAM(configuration["vocabulary"], rutaConfiguracion,ORB_SLAM2::System::MONOCULAR,true);
+    ORB_SLAM2::System SLAM(configuration["vocabulary"], rutaConfiguracion, ORB_SLAM2::System::MONOCULAR, true);
 
     // Puntero global al sistema singleton
     Sistema = &SLAM;
@@ -63,23 +70,24 @@ int main(int argc, char **argv) {
     ORB_SLAM2::Video video;
     new thread(&ORB_SLAM2::Video::Run, &video);
 //
-    switch(argc){
-        case 1:	// Sin argumentos, webcam por defecto y webcam.yaml como configuración
+    switch (argc) {
+        case 1:    // Sin argumentos, webcam por defecto y webcam.yaml como configuración
             cout << "Sin argumentos, webcam con esta configuración: " << rutaConfiguracion << endl;
             break;
-        default: break;
+        default:
+            break;
     }
 
     // inicializacion crow
     crow::SimpleApp app;
 
     CROW_ROUTE(app, "/image")
-    .methods("OPTIONS"_method)
-    ([](const crow::request &req) {
-        crow::response resp;
-        resp.add_header("Access-Control-Allow-Origin","*");
-        return resp;
-    });
+            .methods("OPTIONS"_method)
+                    ([](const crow::request &req) {
+                        crow::response resp;
+                        resp.add_header("Access-Control-Allow-Origin", "*");
+                        return resp;
+                    });
 
 
     CROW_ROUTE(app, "/image")
@@ -98,8 +106,8 @@ int main(int argc, char **argv) {
                         std::vector<BYTE> decodedData = base64_decode(uri_string);
                         cv::Mat img = cv::imdecode(decodedData, cv::IMREAD_UNCHANGED);
 
-                        namedWindow( "Display window", cv::WINDOW_NORMAL );   // Creo una ventana para mostrar imagenes
-                        cv::imshow( "Display window", img );               // Ponemos la imagen que llego
+                        namedWindow("Display window", cv::WINDOW_NORMAL);   // Creo una ventana para mostrar imagenes
+                        cv::imshow("Display window", img);               // Ponemos la imagen que llego
 
                         cv::Mat initialMatrix;
                         initialMatrix = loadMatrix(initialImageLocation, mapRoute);
@@ -125,7 +133,8 @@ int main(int argc, char **argv) {
 
                         Mat displacementVector;
                         if (!bogusImage) {
-                            displacementVector = calculateLocation(initialMatrix, relocMatrix, initialVector, meterFactor);
+                            displacementVector = calculateLocation(initialMatrix, relocMatrix, initialVector,
+                                                                   meterFactor);
                             displacementVector.at<float>(1, 0) = 1;
                         } else {
                             displacementVector = relocMatrix;
@@ -135,8 +144,8 @@ int main(int argc, char **argv) {
                         // mensaje final => x y z, angulo (en grados)
                         resp.body = message + "," + std::to_string(angle);
                         resp.add_header("Content-Type", "text/plain");
-                        resp.add_header("Access-Control-Allow-Origin","*");
-			resp.add_header("Access-Control-Allow-Methods","POST");
+                        resp.add_header("Access-Control-Allow-Origin", "*");
+                        resp.add_header("Access-Control-Allow-Methods", "POST");
                         return resp;
                     });
     app.port(9000).multithreaded().run(); // puerto local 9000
