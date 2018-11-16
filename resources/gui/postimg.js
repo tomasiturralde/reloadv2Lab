@@ -1,11 +1,11 @@
-var http = new XMLHttpRequest();
-var url = "http://localhost:9000/image";
-var img = undefined;
+let http = new XMLHttpRequest();
+let url = "http://localhost:9000/image";
+let img = undefined;
 
-http.open("POST", url, false);
+http.open("POST", url, true);
 http.withCredentials = true;
 http.setRequestHeader("Content-Type", "application/json");
-http.setRequestHeader("Access-Control-Allow-Origin", "*");
+http.setRequestHeader("Access-Control-Allow-Origin", "http://localhost:9000/image");
 http.setRequestHeader("Access-Control-Allow-Methods", "POST");
 http.onreadystatechange = function () {
     if (http.readyState === 4 && http.status === 200) {
@@ -22,11 +22,11 @@ http.onreadystatechange = function () {
 
 function postImgB64(element) {
     init();
-    var file = element.files[0];
-    var reader = new FileReader();
+    const file = element.files[0];
+    let reader = new FileReader();
     reader.onloadend = function() {
         img = reader.result.split(',')[1];
-        var data = JSON.stringify({"uri": img});
+        const data = JSON.stringify({"uri": img});
         http.send(data);
     };
     reader.readAsDataURL(file);
