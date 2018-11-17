@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Reload</title>
+    <title>Relocalización</title>
     <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link rel="stylesheet" type="text/css" href="./style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,23 +20,13 @@
     </nav>
 
     <div class="container">
-        <!--<form method="POST" action="/photo" encType="multipart/form-data">-->
             <div class="row text-center">
-                <h2>Relocación</h2>
-                <!-- <div style="margin-left:15%"> -->
-                    <p>1. Sacá una foto de donde estés</p>
-                    <p>2. Mirá en qué parte del mapa estás</p>
-                    <p>3. Volvé a sacar otra foto para no perderte</p>
-                <!-- </div> -->
+                <h2>Relocalización</h2>
+                <p style="padding-left: 15%;padding-right: 15%">Cargá una foto de donde estés y obtené tu ubicación en el mapa.</p>
             </div>
-            <div class="row text-center">
-                <div class="col-xs-6 col-md-2 col-md-offset-4">
-                    <input id="pic" type="file" onchange="postImgB64(this)" class="input-file" name="imageUpload" accept="image/*" capture>
-                    <label for="pic" class="btn btn-default btn-block">Sacar foto</label>
-                </div>
-                <div class="col-xs-6 col-md-2">
-                    <button onclick="init()" class="btn btn-default btn-block btn-send">Ver mapa</button>
-                </div>
+            <div class="btn-round" id="fixedbutton" style="margin-left: 80%">
+                <input id="pic" type="file" onchange="postImgB64(this)" class="input-file" name="imageUpload" accept="image/*" capture>
+                <label for="pic"><span>+</span></label>
             </div>
 
             <canvas id="e" height="800" style="width:100%;float: left; z-index: 0"></canvas>

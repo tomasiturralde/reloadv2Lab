@@ -85,7 +85,10 @@ int main(int argc, char **argv) {
             .methods("OPTIONS"_method)
                     ([](const crow::request &req) {
                         crow::response resp;
+                        resp.add_header("Content-Type", "text/plain");
                         resp.add_header("Access-Control-Allow-Origin", "*");
+                        resp.add_header("Access-Control-Allow-Headers", "X-Requested-With");
+                        resp.add_header("Access-Control-Allow-Headers", "Access-Control-Allow-Origin");
                         return resp;
                     });
 
@@ -95,7 +98,10 @@ int main(int argc, char **argv) {
                     ([configuration, mapRoute, meterFactor, initialImageLocation](const crow::request &req) {
                         crow::response resp;
                         resp = crow::response(200);
-                        auto body = crow::json::load(req.body); // imagne llega via json
+                        resp.add_header("Access-Control-Allow-Origin", "*");
+                        resp.add_header("Access-Control-Allow-Headers", "X-Requested-With");
+                        resp.add_header("Access-Control-Allow-Headers", "Access-Control-Allow-Origin");
+                        auto body = crow::json::load(req.body); // imagen llega via json
                         if (!body) {
                             cout << "Imagen no pudo ser recibida" << endl;
                             return crow::response(400);
@@ -143,9 +149,6 @@ int main(int argc, char **argv) {
                         cout << "The resultant displacement vector is: " + message << endl;
                         // mensaje final => x y z, angulo (en grados)
                         resp.body = message + "," + std::to_string(angle);
-                        resp.add_header("Content-Type", "text/plain");
-                        resp.add_header("Access-Control-Allow-Origin", "*");
-                        resp.add_header("Access-Control-Allow-Methods", "POST");
                         return resp;
                     });
     app.port(9000).multithreaded().run(); // puerto local 9000

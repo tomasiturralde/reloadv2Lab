@@ -2,11 +2,6 @@ let http = new XMLHttpRequest();
 let url = "http://localhost:9000/image";
 let img = undefined;
 
-http.open("POST", url, true);
-http.withCredentials = true;
-http.setRequestHeader("Content-Type", "application/json");
-http.setRequestHeader("Access-Control-Allow-Origin", "http://localhost:9000/image");
-http.setRequestHeader("Access-Control-Allow-Methods", "POST");
 http.onreadystatechange = function () {
     if (http.readyState === 4 && http.status === 200) {
         // document.getElementById("texto").innerHTML = http.response;
@@ -21,6 +16,10 @@ http.onreadystatechange = function () {
 };
 
 function postImgB64(element) {
+    http.open("POST", url, true);
+    http.setRequestHeader("Access-Control-Allow-Origin", '*');
+    //http.setRequestHeader("Access-Control-Allow-Headers", "content-type");
+    //http.setRequestHeader("Content-Type", "application/json");
     init();
     const file = element.files[0];
     let reader = new FileReader();
