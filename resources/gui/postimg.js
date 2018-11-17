@@ -17,10 +17,6 @@ http.onreadystatechange = function () {
 
 function postImgB64(element) {
     http.open("POST", url, true);
-    http.withCredentials = true;
-    http.setRequestHeader("Content-Type", "application/json");
-    http.setRequestHeader("Access-Control-Allow-Origin", "http://localhost:9000/image");
-    http.setRequestHeader("Access-Control-Allow-Methods", "POST");
     init();
     const file = element.files[0];
     let reader = new FileReader();
