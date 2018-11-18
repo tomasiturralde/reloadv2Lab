@@ -125,3 +125,10 @@
     bottom: 15px;
     right: 15px;
 }
+
+#myAlert {
+    margin-top: 5px;
+    margin-bottom: 0;
+    visibility: hidden;
+    text-align: center;
+}

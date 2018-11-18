@@ -81,6 +81,18 @@ int main(int argc, char **argv) {
     // inicializacion crow
     crow::SimpleApp app;
 
+	CROW_ROUTE(app, "/test")
+            .methods("POST"_method)
+                    ([](const crow::request &req) {
+                        crow::response resp;
+			resp = crow::response(200);
+                        resp.add_header("Content-Type", "text/plain");
+                        resp.add_header("Access-Control-Allow-Origin", "*");
+                        resp.add_header("Access-Control-Allow-Headers", "X-Requested-With");
+                        resp.add_header("Access-Control-Allow-Headers", "Access-Control-Allow-Origin");
+                        return resp;
+                    });
+
     CROW_ROUTE(app, "/image")
             .methods("OPTIONS"_method)
                     ([](const crow::request &req) {
