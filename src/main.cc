@@ -128,7 +128,14 @@ int main(int argc, char **argv) {
                         cv::Mat initialVector = initialMatrix * initialMatrix.col(3);
 
                         Mat relocMatrix = operate(img, mapRoute);
-                        Mat displacedRelocMatrix = displace(relocMatrix);
+                        Mat displacedRelocMatrix;
+                        try {
+                            displacedRelocMatrix = displace(relocMatrix);
+                        } catch (...) {
+                            cout << "Image can't be relocated" << endl;
+                            return crow::response(404);
+                        }
+
                         cout << "Displaced reloc matrix" << endl;
                         cout << displacedRelocMatrix << endl;
                         cout << "Relocation matrix: " << endl;
