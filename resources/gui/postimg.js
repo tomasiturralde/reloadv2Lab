@@ -1,11 +1,11 @@
 let http = new XMLHttpRequest();
-let url = "http://localhost:9000/image";
+let url = "http://192.168.102.112:9000/image";
 let img = undefined;
 
 http.onreadystatechange = function () {
     if (http.readyState === 4 && http.status === 200) {
-        // document.getElementById("texto").innerHTML = http.response;
-        // $("#myModal").modal()
+        //document.getElementById("texto").innerHTML = http.response;
+        //$("#myModal").modal()
 	let response = http.response.split(",");
         let coordinates = response[0].split(" ");
         const x = coordinates[0];

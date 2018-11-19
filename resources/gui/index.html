@@ -25,7 +25,7 @@
                 <p style="padding-left: 15%;padding-right: 15%">Cargá una foto de donde estés y obtené tu ubicación en el mapa.</p>
             </div>
             <div class="btn-round" id="fixedbutton" style="margin-left: 80%">
-                <input id="pic" type="file" onchange="postImgB64(this)" class="input-file" name="imageUpload" accept="image/*" capture>
+                <input id="pic" type="file" capture="camera" onchange="postImgB64(this)" class="input-file" name="imageUpload">
                 <label for="pic"><span>+</span></label>
             </div>
 
@@ -40,7 +40,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Coordenadas</h4>
+                    <h4 class="modal-title">Informacion</h4>
                 </div>
                 <div class="modal-body">
                     <p id="texto"></p>
