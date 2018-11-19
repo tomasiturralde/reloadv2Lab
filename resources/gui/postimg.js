@@ -18,8 +18,8 @@ http.onreadystatechange = function () {
 };
 
 function postImgB64(element) {
-    document.getElementById("myAlert").style.visibility = "hidden";
     if (isAccessible) {
+	document.getElementById("myAlert").style.visibility = "hidden";
         http.open("POST", url, true);
         init();
         const file = element.files[0];
@@ -49,6 +49,8 @@ function checkConnection() {
                 isAccessible = false;
                 document.getElementById("myAlert").style.visibility = "visible";
                 document.getElementById("alertText").innerHTML = "El servidor no esta funcionando.</br>Por favor intente mas tarde";
+		document.getElementById("fixedbutton").style.backgroundColor = "grey";
+		document.getElementById("pic").disabled = true;
             }
         }
     });

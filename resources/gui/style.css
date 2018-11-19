@@ -98,7 +98,6 @@
 }
 
 .btn-round {
-    background-color: #0c247c;
     border-radius: 999em;
     width: 56px;
     height: 56px;
@@ -121,6 +120,7 @@
 }
 
 #fixedbutton {
+    background-color: #0c247c;
     position: fixed;
     bottom: 15px;
     right: 15px;
