@@ -81,11 +81,12 @@ int main(int argc, char **argv) {
     // inicializacion crow
     crow::SimpleApp app;
 
-	CROW_ROUTE(app, "/test")
+    // ruta que se utiliza para testear la conexion
+    CROW_ROUTE(app, "/test")
             .methods("POST"_method)
                     ([](const crow::request &req) {
                         crow::response resp;
-			resp = crow::response(200);
+                        resp = crow::response(200);
                         resp.add_header("Content-Type", "text/plain");
                         resp.add_header("Access-Control-Allow-Origin", "*");
                         resp.add_header("Access-Control-Allow-Headers", "X-Requested-With");

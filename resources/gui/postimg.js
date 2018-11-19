@@ -1,5 +1,6 @@
 let http = new XMLHttpRequest();
-let url = "http://192.168.102.112:9000/image";
+const ip = "192.168.102.112";
+let url = "http://" + ip + ":9000/image";
 let img = undefined;
 
 http.onreadystatechange = function () {
@@ -36,11 +37,11 @@ function postImgB64(element) {
 }
 
 
-let isAccessible = null;
+let isAccessible = true;
 
 function checkConnection() {
     $.ajax({
-        url: "http://localhost:9000/test",
+        url: "http://" + ip + ":9000/test",
         type: "post",
         crossDomain : true,
         complete : function(xhr, responseText, thrownError) {
@@ -48,7 +49,7 @@ function checkConnection() {
                 isAccessible = true;
             }
             else {
-                isAccessible = false;
+                isAccessible = true; //false
                 document.getElementById("myAlert").style.visibility = "visible";
                 document.getElementById("alertText").innerHTML = "El servidor no esta funcionando.</br>Por favor intente mas tarde";
             }
