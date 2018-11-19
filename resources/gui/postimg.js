@@ -1,5 +1,5 @@
 let http = new XMLHttpRequest();
-const ip = "192.168.102.112";
+const ip = "192.168.88.133";
 let url = "http://" + ip + ":9000/image";
 let img = undefined;
 
@@ -11,12 +11,9 @@ http.onreadystatechange = function () {
         const y = coordinates[2];
         const angle = response[1];
         draw(x, y, angle);
-    } else if (http.status === 404) {
+    } else if (http.readyState === 4 && http.status !== 200) {
         document.getElementById("myAlert").style.visibility = "visible";
         document.getElementById("alertText").innerHTML = "No se pudo relocalizar.</br>Por favor intente con otra foto";
-    } else if (http.status === 500) {
-        document.getElementById("myAlert").style.visibility = "visible";
-        document.getElementById("alertText").innerHTML = "El servidor no esta funcionando.</br>Por favor intente mas tarde";
     }
 };
 
@@ -45,11 +42,11 @@ function checkConnection() {
         type: "post",
         crossDomain : true,
         complete : function(xhr, responseText, thrownError) {
-            if(xhr.status === "200") {
+            if(xhr.status === 200) {
                 isAccessible = true;
             }
             else {
-                isAccessible = true; //false
+                isAccessible = false;
                 document.getElementById("myAlert").style.visibility = "visible";
                 document.getElementById("alertText").innerHTML = "El servidor no esta funcionando.</br>Por favor intente mas tarde";
             }
