@@ -25,6 +25,7 @@ function draw(x, y, rot) {
     	context.rotate(rotate*(Math.PI/180));
     	context.drawImage(img, -7, -10, 15, 20);
     	context.restore();
+	window.scroll(posX, posY);
     }
 }
 
