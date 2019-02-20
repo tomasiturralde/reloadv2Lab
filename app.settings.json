@@ -1,7 +1,7 @@
 {
     "webcam": "resources/webcam.yaml",
     "vocabulary": "resources/orbVoc.bin",
-    "map": "resources/moduloB2.osMap",
-    "initialImage": "resources/photo/origin/origin.jpg",
+    "map": "resources/mapa1L.osMap",
+    "initialImage": "resources/photo/originL/1.jpg",
     "meterFactor": 16.68060
 }
