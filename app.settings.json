@@ -3,5 +3,5 @@
     "vocabulary": "resources/orbVoc.bin",
     "map": "resources/mapa1L.osMap",
     "initialImage": "resources/photo/originL/1.jpg",
-    "meterFactor": 16.68060
+    "meterFactor": 15
 }

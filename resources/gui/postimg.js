@@ -1,5 +1,5 @@
 let http = new XMLHttpRequest();
-const ip = "172.22.37.119";
+const ip = "172.22.37.42";
 let url = "http://" + ip + ":9000/image";
 let img = undefined;
 
@@ -18,6 +18,7 @@ http.onreadystatechange = function () {
 };
 
 function postImgB64(element) {
+    checkConnection();
     if (isAccessible) {
 	document.getElementById("myAlert").style.visibility = "hidden";
         http.open("POST", url, true);

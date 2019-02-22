@@ -2,9 +2,9 @@ function init() {
     var canvas = document.getElementById("e");
     var context = canvas.getContext("2d");
     var plane = new Image();
-    plane.src = "plano.jpg";
+    plane.src = "planoLab.png";
     plane.onload = function() {
-        context.drawImage(plane, 0, 0, 480, 800);
+        context.drawImage(plane, 0, 0, 380, 700);
     };
     enableScroll();
 }
@@ -12,9 +12,9 @@ function init() {
 function draw(x, y, rot) {
     var canvas = document.getElementById("e");
     var context = canvas.getContext("2d");
-    var posX = 225 + (float2int(x)*15);
-    var posY = 780 - (float2int(y)*10);
-    var rotate = 90 - rot;
+    var posX = 70 + (float2int(x)*(-5));
+    var posY = 445 - (float2int(y)*(-15));
+    var rotate = 180 - rot;
 
     var img = new Image();
     img.src = "redarrow.png";
